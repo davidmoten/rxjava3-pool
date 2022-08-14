@@ -1,14 +1,28 @@
 @startuml
 
-[*] --> NotInitialized: CreateMember
-NotInitialized --> Initializing: CreateValue
-Initializing --> InitializedAvailable: ValueCreated
-CheckedOut --> InitializedAvailable: ValueCreated
-InitializedAvailable --> Releasing: Release
-Releasing --> Initializing: CreateMember
-CheckedOut --> CheckingHealthThreshold
-CheckingHealthThreshold --> CheckingHealth: CheckHealth
-CheckingHealth --> CheckedOut: Checkout
+[*] --> NotInitialized: Create
+NotInitialized --> Initializing: Initialize
+Initializing --> InitializedAvailable: Value
+InitializedAvailable --> Checking: Checkout
+Checking --> NotInitialized: CheckedNotOk
+Checking --> CheckedOut: CheckedOK
+InitializedAvailable --> Releasing: Release 
+Releasing --> NotInitialized: Released
+CheckedOut --> InitializedAvailable: Checkin
 
+note bottom of Checking
+  If the check fails it should
+  perform any disposal action
+  on the member value before 
+  deleting the member value (as
+  part of returning to the 
+  state of NonInitialized)
+end note
+
+note bottom of CheckedOut
+  the Member is pushed to the 
+  next pool subscriber for active 
+  use
+end note
 @enduml
 

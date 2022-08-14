@@ -56,8 +56,8 @@ final class MemberSingle<T> extends Single<Member<T>> implements Closeable {
     @SuppressWarnings("unchecked")
     MemberSingle(NonBlockingPool<T> pool) {
         Preconditions.checkNotNull(pool);
-        this.initializedAvailable = new MpscLinkedQueue<DecoratingMember<T>>();
         this.notInitialized = new MpscLinkedQueue<DecoratingMember<T>>();
+        this.initializedAvailable = new MpscLinkedQueue<DecoratingMember<T>>();
         this.toBeReleased = new MpscLinkedQueue<DecoratingMember<T>>();
         this.toBeChecked = new MpscLinkedQueue<DecoratingMember<T>>();
         this.members = createMembersArray(pool.maxSize, pool.checkinDecorator);
