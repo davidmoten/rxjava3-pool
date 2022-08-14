@@ -6,7 +6,7 @@ A pool is initialized with `n` Member objects where `n` is the maximum size of t
 
 Each Member object is either empty or holds an initialized value (like a database connection for example). 
 
-The state diagram for a Member is below. 
+The state diagram for a Member is below. The states in green have entry procedures that can be run on user-specified schedulers (see example of creating a `NonBlockingPool` below).
 
 <img  src="src/docs/Member-state-diagram.png"/>
 
