@@ -63,24 +63,10 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.davidmoten</groupId>
-            <artifactId>state-machine-generator</artifactId>
-            <version>0.2.19</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-                <configuration>
-                    <source>${maven.compiler.target}</source>
-                    <target>${maven.compiler.target}</target>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
