@@ -6,8 +6,8 @@ import java.util.function.BiFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 final class DecoratingMember<T> implements Member<T> {
 

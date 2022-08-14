@@ -13,16 +13,16 @@ import org.slf4j.LoggerFactory;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 
-import io.reactivex.Scheduler;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.queue.MpscLinkedQueue;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Scheduler.Worker;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.SingleObserver;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.queue.MpscLinkedQueue;
+import io.reactivex.rxjava3.operators.SimplePlainQueue;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 final class MemberSingle<T> extends Single<Member<T>> implements Closeable {
 

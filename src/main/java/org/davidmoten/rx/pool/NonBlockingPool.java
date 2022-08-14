@@ -7,13 +7,13 @@ import java.util.function.BiFunction;
 
 import com.github.davidmoten.guavamini.Preconditions;
 
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Predicate;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public final class NonBlockingPool<T> implements Pool<T> {
 
@@ -96,7 +96,7 @@ public final class NonBlockingPool<T> implements Pool<T> {
         }
         try {
             closeAction.run();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             RxJavaPlugins.onError(e);
         }
     }

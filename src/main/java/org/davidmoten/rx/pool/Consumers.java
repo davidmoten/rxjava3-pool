@@ -1,6 +1,6 @@
 package org.davidmoten.rx.pool;
 
-import io.reactivex.functions.Consumer;
+import io.reactivex.rxjava3.functions.Consumer;
 
 final class Consumers {
 

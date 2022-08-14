@@ -2,7 +2,6 @@ package org.davidmoten.rx.pool;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
@@ -19,18 +18,20 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.davidmoten.rx.internal.FlowableSingleDeferUntilRequest;
 import org.junit.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.UndeliverableException;
-import io.reactivex.functions.Consumer;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.SingleObserver;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.UndeliverableException;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.observers.TestObserver;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.schedulers.TestScheduler;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
+
 
 public class NonBlockingPoolTest {
 
@@ -182,8 +183,9 @@ public class NonBlockingPoolTest {
                 .test(4); //
         s.triggerActions();
         ts.assertValueCount(4) //
-                .assertNotTerminated();
-        List<Object> list = ts.getEvents().get(0);
+                .assertNotComplete() //
+                .assertNoErrors();
+        @NonNull List<Integer> list = ts.values();
         // all 4 connections released were the same
         assertTrue(list.get(0) == list.get(1));
         assertTrue(list.get(1) == list.get(2));
@@ -212,14 +214,16 @@ public class NonBlockingPoolTest {
         s.triggerActions();
         ts.assertNoErrors() //
                 .assertValueCount(2) //
-                .assertNotTerminated();
+                .assertNotComplete() //
+                .assertNoErrors();
         List<Member<Integer>> list = new ArrayList<>(ts.values());
         list.get(1).checkin(); // should release a connection
         s.triggerActions();
         {
-            List<Object> values = ts.assertValueCount(3) //
-                    .assertNotTerminated() //
-                    .getEvents().get(0);
+            @NonNull List<Member<Integer>> values = ts.assertValueCount(3) //
+                    .assertNotComplete() //
+                    .assertNoErrors() //
+                    .values();
             assertEquals(list.get(0).hashCode(), values.get(0).hashCode());
             assertEquals(list.get(1).hashCode(), values.get(1).hashCode());
             assertEquals(list.get(1).hashCode(), values.get(2).hashCode());
@@ -229,9 +233,10 @@ public class NonBlockingPoolTest {
         s.triggerActions();
 
         {
-            List<Object> values = ts.assertValueCount(4) //
-                    .assertNotTerminated() //
-                    .getEvents().get(0);
+            @NonNull List<Member<Integer>> values = ts.assertValueCount(4) //
+                    .assertNotComplete() //
+                    .assertNoErrors() //
+                    .values();
             assertEquals(list.get(0), values.get(0));
             assertEquals(list.get(1), values.get(1));
             assertEquals(list.get(1), values.get(2));
@@ -351,7 +356,8 @@ public class NonBlockingPoolTest {
             TestObserver<Integer> ts = pool.member() //
                     .map(m -> m.value()) //
                     .test() //
-                    .assertNotTerminated() //
+                    .assertNotComplete() //
+                    .assertNoErrors() //
                     .assertNoValues();
             s.triggerActions();
             assertTrue(ex.get() instanceof UndeliverableException);
@@ -484,15 +490,14 @@ public class NonBlockingPoolTest {
                 .build();
         Scheduler scheduler = Schedulers.from(Executors.newFixedThreadPool(poolSize));
         AtomicInteger checkouts = new AtomicInteger();
-        Throwable result = Flowable.rangeLong(0, 10000L) //
+        Flowable.rangeLong(0, 10000L) //
                 .flatMapCompletable((Long n) -> pool.member() //
                         .subscribeOn(scheduler) //
                         .doOnSuccess((Member<Integer> m) -> {
                             checkouts.incrementAndGet();
                             m.checkin();
                         }).ignoreElement()) //
-                .blockingGet(60, TimeUnit.SECONDS);
-        assertNull(result);
+                .blockingAwait(60, TimeUnit.SECONDS);
     }
 
     private static Scheduler createScheduleToDelayCreation(TestScheduler ts) {

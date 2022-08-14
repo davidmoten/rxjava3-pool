@@ -12,7 +12,7 @@ public class ConsumersTest {
     }
 
     @Test
-    public void testDoNothing() throws Exception {
+    public void testDoNothing() throws Throwable {
         Consumers.doNothing().accept(1);
     }
 

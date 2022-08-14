@@ -7,8 +7,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import io.reactivex.Single;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
+
 
 public class FlowableSingleDeferUntilRequestTest {
 
@@ -48,7 +49,8 @@ public class FlowableSingleDeferUntilRequestTest {
                 .test(0);
         ts.cancel();
         ts.assertNoValues();
-        ts.assertNotTerminated();
+        ts.assertNotComplete();
+        ts.assertNoErrors();
         ts.cancel();
     }
 
