@@ -15,7 +15,7 @@ A `Pool` conforms to this interface:
 ```java
 public interface Pool<T> extends AutoCloseable {
 
-  Single<Member<T>> member();
+    Single<Member<T>> member();
 
 }
 ```
