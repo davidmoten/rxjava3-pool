@@ -4,6 +4,8 @@ state Initializing #palegreen {
 }
 state Checking #palegreen {
 }
+state Disposing #palegreen {
+}
 
 [*] --> NotInitialized: Create
 NotInitialized --> Initializing: Initialize
