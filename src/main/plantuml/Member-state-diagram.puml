@@ -1,0 +1,14 @@
+@startuml
+
+[*] --> NotInitialized: CreateMember
+NotInitialized --> Initializing: CreateValue
+Initializing --> InitializedAvailable: ValueCreated
+CheckedOut --> InitializedAvailable: ValueCreated
+InitializedAvailable --> Releasing: Release
+Releasing --> Initializing: CreateMember
+CheckedOut --> CheckingHealthThreshold
+CheckingHealthThreshold --> CheckingHealth: CheckHealth
+CheckingHealth --> CheckedOut: Checkout
+
+@enduml
+
