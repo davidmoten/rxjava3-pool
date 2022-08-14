@@ -19,12 +19,8 @@ Disposing --> NotInitialized: Disposed
 CheckedOut --> InitializedAvailable: Checkin
 
 note bottom of Checking
-  If the check fails it should
-  perform any disposal action
-  on the member value before 
-  deleting the member value (as
-  part of returning to the 
-  state of NonInitialized)
+  If the check fails it also performs
+  the user-specified disposal action
 end note
 
 note bottom of CheckedOut
