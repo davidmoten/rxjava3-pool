@@ -3,6 +3,7 @@
 [*] --> NotInitialized: Create
 NotInitialized --> Initializing: Initialize
 Initializing --> InitializedAvailable: Value
+Initializing --> Initializing: Retry
 InitializedAvailable --> Checking: Checkout
 Checking --> NotInitialized: CheckedNotOk
 Checking --> CheckedOut: CheckedOK

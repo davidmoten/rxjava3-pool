@@ -19,3 +19,25 @@ public interface Pool<T> extends AutoCloseable {
 
 }
 ```
+
+This library provides one implementation of `Pool` being `NonBlockingPool`. Here's an example to create one:
+
+```java
+Pool<Connnection> pool = 
+  NonBlockingPool
+    .factory(() -> DriverManager.getConnection(url))
+    .checkinDecorator(checkInDecorator)
+    .idleTimeBeforeHealthCheck(30, TimeUnit.SECONDS)
+    .maxIdleTime(300, TimeUnit.SECONDS) 
+    .createRetryInterval(10, TimeUnit.SECONDS)
+    .scheduler(Schedulers.io())
+    .disposer(c -> {try { c.close();} catch (Throwable e) {log.warn(e.getMessage(),e);}})
+    .healthCheck(c -> true)
+    .scheduler(Schedulers.io())
+    .maxSize(10)
+    .build();
+```
+
+The `Single<Member>` returned by `Pool.member()` can be subscribed to as many times as you like, concurrently if desired.
+
+Note that the *release* (*dispose*) action should not throw, nor should the *checker* action. The *initializing* action may throw and if it does will be subject to retries on user-specified interval.
