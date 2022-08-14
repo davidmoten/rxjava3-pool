@@ -1,5 +1,10 @@
 @startuml
 
+state Initializing #palegreen {
+}
+state Checking #palegreen {
+}
+
 [*] --> NotInitialized: Create
 NotInitialized --> Initializing: Initialize
 Initializing --> InitializedAvailable: Value
@@ -25,5 +30,6 @@ note bottom of CheckedOut
   next pool subscriber for active 
   use
 end note
+
 @enduml
 
