@@ -134,13 +134,33 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.github.davidmoten</groupId>
+                <artifactId>plantuml-maven-plugin</artifactId>
+                <version>0.1.5</version>
+                <executions>
+                    <execution>
+                        <id>generate-diagrams</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <directory>${project.basedir}/src/main/plantuml</directory>
+                                <includes>
+                                    <include>*.puml</include>
+                                </includes>
+                            </sources>
+                            <formats>
+                                <format>png</format>
+                                <format>svg</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse 
-                    m2e settings only. It has no influence on the Maven build itself. -->
-            </plugins>
-        </pluginManagement>
     </build>
 
     <reporting>
