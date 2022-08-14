@@ -9,3 +9,13 @@ Each Member object is either empty or holds an initialized value (like a databas
 The state diagram for a Member is below. 
 
 <img  src="src/docs/Member-state-diagram.png"/>
+
+A `Pool` conforms to this interface:
+
+```java
+public interface Pool<T> extends AutoCloseable {
+
+  Single<Member<T>> member();
+
+}
+```
