@@ -4,7 +4,7 @@ state Initializing #palegreen {
 }
 state Checking #palegreen {
 }
-state Disposing #palegreen {
+state Releasing #palegreen {
 }
 
 [*] --> NotInitialized: Create
@@ -12,16 +12,12 @@ NotInitialized --> Initializing: Initialize
 Initializing --> InitializedAvailable: Value
 Initializing --> Initializing: Retry
 InitializedAvailable --> Checking: Checkout
-Checking --> NotInitialized: CheckedNotOk
-Checking --> CheckedOut: CheckedOK
-InitializedAvailable --> Disposing: IdleTimeout 
+Checking --> Disposing: Dispose
+Checking --> CheckedOut: Ok
+InitializedAvailable --> Releasing: IdleTimeout
+Releasing --> Disposing: Dispose 
 Disposing --> NotInitialized: Disposed
 CheckedOut --> InitializedAvailable: Checkin
-
-note bottom of Checking
-  If the check fails it also performs
-  the user-specified disposal action
-end note
 
 note bottom of CheckedOut
   the Member is pushed to the 
