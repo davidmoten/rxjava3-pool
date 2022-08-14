@@ -7,8 +7,8 @@ Initializing --> Initializing: Retry
 InitializedAvailable --> Checking: Checkout
 Checking --> NotInitialized: CheckedNotOk
 Checking --> CheckedOut: CheckedOK
-InitializedAvailable --> Releasing: Release 
-Releasing --> NotInitialized: Released
+InitializedAvailable --> Disposing: IdleTimeout 
+Disposing --> NotInitialized: Disposed
 CheckedOut --> InitializedAvailable: Checkin
 
 note bottom of Checking

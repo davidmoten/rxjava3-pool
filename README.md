@@ -38,6 +38,6 @@ Pool<Connnection> pool =
     .build();
 ```
 
-The `Single<Member>` returned by `Pool.member()` can be subscribed to as many times as you like, concurrently if desired.
+The `Single<Member>` returned by `Pool.member()` can be subscribed to as many times as you like, concurrently if desired. The subscriber will be emitted to with a `Member` that has a value and when the subscriber has finished should call `Member.checkin()` to return the item to the pool.
 
 Note that the *release* (*dispose*) action should not throw, nor should the *checker* action. The *initializing* action may throw and if it does will be subject to retries on user-specified interval.
