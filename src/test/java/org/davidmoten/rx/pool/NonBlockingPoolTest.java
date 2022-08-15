@@ -531,5 +531,26 @@ public class NonBlockingPoolTest {
 
         };
     }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidMaxSize() {
+        NonBlockingPool //
+                .factory(() -> 1) //
+                .maxSize(0);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidIdleTime() {
+        NonBlockingPool //
+                .factory(() -> 1) //
+                .maxIdleTime(-1, TimeUnit.SECONDS);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidIdleTimeBeforeHealthCheck() {
+        NonBlockingPool //
+                .factory(() -> 1) //
+                .idleTimeBeforeHealthCheck(-1, TimeUnit.SECONDS);
+    }
 
 }

@@ -163,6 +163,7 @@ public final class NonBlockingPool<T> implements Pool<T> {
          * @return this
          */
         public Builder<T> maxIdleTime(long value, TimeUnit unit) {
+            Preconditions.checkArgument(value >= 0);
             this.maxIdleTimeMs = unit.toMillis(value);
             return this;
         }
