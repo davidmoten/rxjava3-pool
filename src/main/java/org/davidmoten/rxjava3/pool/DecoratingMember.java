@@ -1,4 +1,4 @@
-package org.davidmoten.rx.pool;
+package org.davidmoten.rxjava3.pool;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;

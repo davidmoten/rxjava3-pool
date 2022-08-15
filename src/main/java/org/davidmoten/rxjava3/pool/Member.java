@@ -1,4 +1,4 @@
-package org.davidmoten.rx.pool;
+package org.davidmoten.rxjava3.pool;
 
 public interface Member<T> extends Checkin {
 

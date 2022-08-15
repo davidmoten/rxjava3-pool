@@ -1,11 +1,11 @@
-package org.davidmoten.rx.internal;
+package org.davidmoten.rxjava3.pool.internal;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.davidmoten.rx.internal.FlowableSingleDeferUntilRequest.SingleSubscription;
+import org.davidmoten.rxjava3.pool.internal.FlowableSingleDeferUntilRequest.SingleSubscription;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
