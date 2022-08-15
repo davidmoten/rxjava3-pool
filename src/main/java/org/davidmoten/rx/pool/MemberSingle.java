@@ -112,7 +112,7 @@ final class MemberSingle<T> extends Single<Member<T>> implements Closeable {
 
     public void checkin(Member<T> member, boolean decrementInitializeScheduled) {
         log.debug("checking in {}", member);
-        DecoratingMember<T> d = ((DecoratingMember<T>) member);
+        DecoratingMember<T> d = (DecoratingMember<T>) member;
         d.scheduleRelease();
         d.markAsChecked();
         initializedAvailable.offer((DecoratingMember<T>) member);
@@ -262,7 +262,7 @@ final class MemberSingle<T> extends Single<Member<T>> implements Closeable {
         int index = obs.index;
         // a precondition of this method is that obs.activeCount > 0 (enforced by drain method)
         MemberSingleObserver<T> o = obs.observers[index];
-        MemberSingleObserver<T> oNext = o;
+        MemberSingleObserver<T> oNext;
         
         // atomically bump up the index to select the next Observer by round-robin
         // (if that entry has not been deleted in the meantime by disposal). Need 
