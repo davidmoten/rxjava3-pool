@@ -105,7 +105,7 @@ public final class NonBlockingPool<T> implements Pool<T> {
         return closed;
     }
 
-    public static <T> Builder<T> factory(Callable<T> factory) {
+    public static <T> Builder<T> factory(Callable<? extends T> factory) {
         return new Builder<T>().factory(factory);
     }
 
@@ -149,6 +149,7 @@ public final class NonBlockingPool<T> implements Pool<T> {
 
         public Builder<T> idleTimeBeforeHealthCheck(long duration, TimeUnit unit) {
             Preconditions.checkArgument(duration >= 0);
+            Preconditions.checkNotNull(unit);
             this.idleTimeBeforeHealthCheckMs = unit.toMillis(duration);
             return this;
         }
@@ -164,11 +165,14 @@ public final class NonBlockingPool<T> implements Pool<T> {
          */
         public Builder<T> maxIdleTime(long value, TimeUnit unit) {
             Preconditions.checkArgument(value >= 0);
+            Preconditions.checkNotNull(unit);
             this.maxIdleTimeMs = unit.toMillis(value);
             return this;
         }
 
         public Builder<T> createRetryInterval(long duration, TimeUnit unit) {
+            Preconditions.checkArgument(duration >=0);
+            Preconditions.checkNotNull(unit);
             this.createRetryIntervalMs = unit.toMillis(duration);
             return this;
         }
@@ -192,11 +196,13 @@ public final class NonBlockingPool<T> implements Pool<T> {
         }
 
         public Builder<T> checkinDecorator(BiFunction<? super T, ? super Checkin, ? extends T> f) {
+            Preconditions.checkNotNull(f);
             this.checkinDecorator = f;
             return this;
         }
 
         public Builder<T> onClose(Action closeAction) {
+            Preconditions.checkNotNull(closeAction);
             this.closeAction = closeAction;
             return this;
         }
