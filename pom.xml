@@ -11,7 +11,7 @@
 
     <name>${project.artifactId}</name>
     <description>RxJava2 reactive pool</description>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -200,6 +200,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>5.1.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <obrRepository>NONE</obrRepository>
+                </configuration>
             </plugin>
         </plugins>
     </build>
