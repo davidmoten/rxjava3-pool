@@ -19,6 +19,21 @@ public interface Pool<T> extends AutoCloseable {
 
 }
 ```
+A `Member` is an interface like this (slightly simplified):
+```java
+public interface Member<T> {
+
+    T value();
+
+    /**
+     * This method should not throw. Feel free to add logging so that you are aware
+     * of a problem with disposal.
+     */
+    void disposeValue();
+    
+    void checkin();
+}
+```
 
 This library provides one implementation of `Pool` being `NonBlockingPool`. Here's an example to create one:
 
