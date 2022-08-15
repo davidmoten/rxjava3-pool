@@ -5,9 +5,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.davidmoten.rx.internal.FlowableSingleDeferUntilRequest.SingleSubscription;
 import org.junit.Test;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 
@@ -52,6 +57,52 @@ public class FlowableSingleDeferUntilRequestTest {
         ts.assertNotComplete();
         ts.assertNoErrors();
         ts.cancel();
+    }
+    
+    @Test
+    public void testSubscribeTwice() {
+        Single<Integer> s = Single.fromCallable(() -> {
+            return 1;
+        });
+        SingleSubscription<Integer> sub = new SingleSubscription<Integer>(s, new Subscriber<Integer>() {
+
+            @Override
+            public void onSubscribe(Subscription s) {
+                
+            }
+
+            @Override
+            public void onNext(Integer t) {
+                
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                
+            }
+
+            @Override
+            public void onComplete() {
+                
+            }});
+        sub.request(0);
+        sub.request(1);
+        sub.request(1);
+        AtomicBoolean b = new AtomicBoolean();
+        sub.onSubscribe(new Disposable() {
+
+            @Override
+            public void dispose() {
+                b.set(true);
+            }
+
+            @Override
+            public boolean isDisposed() {
+                // TODO Auto-generated method stub
+                return false;
+            }});
+        assertTrue(b.get());
+        sub.request(1);
     }
 
 }

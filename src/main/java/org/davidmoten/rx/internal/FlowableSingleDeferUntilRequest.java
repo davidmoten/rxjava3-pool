@@ -6,6 +6,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
+
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.SingleObserver;
@@ -26,7 +28,8 @@ public final class FlowableSingleDeferUntilRequest<T> extends Flowable<T> {
         s.onSubscribe(sub);
     }
 
-    private static final class SingleSubscription<T> extends AtomicBoolean implements Subscription, SingleObserver<T> {
+    @VisibleForTesting
+    static final class SingleSubscription<T> extends AtomicBoolean implements Subscription, SingleObserver<T> {
 
         private static final long serialVersionUID = -4290226935675014466L;
 
