@@ -10,7 +10,7 @@
     <artifactId>rxjava3-pool</artifactId>
 
     <name>${project.artifactId}</name>
-    <description>RxJava2 reactive pool</description>
+    <description>RxJava 3.x reactive pool</description>
     <packaging>bundle</packaging>
 
     <properties>
