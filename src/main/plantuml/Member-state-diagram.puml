@@ -11,13 +11,30 @@ state Releasing #palegreen {
 NotInitialized --> Initializing: Initialize
 Initializing --> InitializedAvailable: Value
 Initializing --> Initializing: Retry
-InitializedAvailable --> Checking: Checkout
+InitializedAvailable --> PreCheck: Checkout 
+PreCheck --> Checking: Checkout
 Checking --> Disposing: Dispose
 Checking --> CheckedOut: Ok
 InitializedAvailable --> Releasing: IdleTimeout
 Releasing --> Disposing: Dispose 
 Disposing --> NotInitialized: Disposed
 CheckedOut --> InitializedAvailable: Checkin
+PreCheck --> CheckedOut: Ok
+
+Initializing: if initialize fails
+Initializing: send Retry to self with delay
+Initializing: else 
+Initializing: send Value to self
+
+PreCheck: if checked recently
+PreCheck: send Ok to self
+PreCheck: else 
+PreCheck: send Checkout to self
+
+Checking: if health check fails
+Checking: send Dispose to self
+Checking: else
+Checking: send Checkout to self
 
 note bottom of CheckedOut
   the Member is pushed to the 
