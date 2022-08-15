@@ -1,4 +1,7 @@
 # rxjava3-pool
+<a href="https://github.com/davidmoten/rxjava3-pool/actions/workflows/ci.yml"><img src="https://github.com/davidmoten/rxjava3-pool/actions/workflows/ci.yml/badge.svg"/></a><br/>
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rxjava3-pool-runtime/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rxjava3-pool)<br/>
+[![codecov](https://codecov.io/gh/davidmoten/rxjava3-pool/branch/master/graph/badge.svg)](https://codecov.io/gh/davidmoten/rxjava3-pool)<br/>
 
 Reactive object pool for use with RxJava 3.x. A core artifact for [rxjava2-jdbc](https://github.com/davidmoten/rxjava2-jdbc) that has been migrated to RxJava 3.x and given its own source repository.
 
