@@ -37,7 +37,7 @@ public class NonBlockingPoolConcurrencyTest {
                     // and not checked in
                     .observeOn(Schedulers.from(Executors.newFixedThreadPool(1)), false, 1) //
                     .doOnNext(member -> member.checkin()) //
-                    .timeout(20, TimeUnit.SECONDS) //
+                    .timeout(10, TimeUnit.SECONDS) //
                     .doOnError(e -> {
                         System.out.println("emitted " + c[0] + ", count=" + count);
                     }) //
