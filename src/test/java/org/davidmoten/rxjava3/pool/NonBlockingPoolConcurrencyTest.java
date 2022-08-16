@@ -27,7 +27,7 @@ public class NonBlockingPoolConcurrencyTest {
                 .maxIdleTime(1, TimeUnit.MINUTES) //
                 .disposer(n -> disposed.incrementAndGet()) //
                 .build()) {
-            long n = Long.parseLong(System.getProperty("n", "100000"));
+            long n = Long.parseLong(System.getProperty("n", "10000"));
             long[] c = new long[1];
             Flowable //
                     .rangeLong(0, n) //
@@ -37,7 +37,7 @@ public class NonBlockingPoolConcurrencyTest {
                     // and not checked in
                     .observeOn(Schedulers.from(Executors.newFixedThreadPool(1)), false, 1) //
                     .doOnNext(member -> member.checkin()) //
-                    .timeout(10, TimeUnit.SECONDS) //
+                    .timeout(20, TimeUnit.SECONDS) //
                     .doOnError(e -> {
                         System.out.println("emitted " + c[0] + ", count=" + count);
                     }) //

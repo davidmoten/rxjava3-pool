@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
 import com.github.davidmoten.guavamini.Preconditions;
+import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
@@ -111,7 +112,8 @@ public final class NonBlockingPool<T> implements Pool<T> {
 
     public static class Builder<T> {
 
-        private static final Predicate<Object> ALWAYS_TRUE = new Predicate<Object>() {
+        @VisibleForTesting
+        static final Predicate<Object> ALWAYS_TRUE = new Predicate<Object>() {
             @Override
             public boolean test(Object o) throws Exception {
                 return true;

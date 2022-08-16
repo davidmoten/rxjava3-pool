@@ -9,6 +9,11 @@ final class Consumers {
     }
 
     static final class DoNothingHolder {
+        
+        private DoNothingHolder() {
+            // prevent instantiation    
+        }
+        
         static final Consumer<Object> value = new Consumer<Object>() {
 
             @Override

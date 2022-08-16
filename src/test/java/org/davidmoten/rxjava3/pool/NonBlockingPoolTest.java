@@ -19,6 +19,7 @@ import org.davidmoten.rxjava3.pool.internal.FlowableSingleDeferUntilRequest;
 import org.junit.Test;
 
 import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.annotations.Nullable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
@@ -31,7 +32,6 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.schedulers.TestScheduler;
 import io.reactivex.rxjava3.subscribers.TestSubscriber;
-
 
 public class NonBlockingPoolTest {
 
@@ -61,12 +61,13 @@ public class NonBlockingPoolTest {
         s.triggerActions();
         assertEquals(1, disposed.get());
     }
-    
+
     @Test
-    public void testMaxIdleTimeResetIfUsed() throws InterruptedException {
+    public void testMaxIdleTimeResetIfUsed() throws Exception {
         TestScheduler s = new TestScheduler();
         AtomicInteger count = new AtomicInteger();
         AtomicInteger disposed = new AtomicInteger();
+        AtomicBoolean closed = new AtomicBoolean();
         Pool<Integer> pool = NonBlockingPool //
                 .factory(() -> count.incrementAndGet()) //
                 .healthCheck(n -> true) //
@@ -74,6 +75,8 @@ public class NonBlockingPoolTest {
                 .maxIdleTime(2, TimeUnit.MINUTES) //
                 .disposer(n -> disposed.incrementAndGet()) //
                 .scheduler(s) //
+                .onClose(() -> closed.set(true)) //
+                .checkinDecorator((x, y) -> x) //
                 .build();
         Single<Member<Integer>> member = pool.member() //
                 .doOnSuccess(System.out::println) //
@@ -90,6 +93,9 @@ public class NonBlockingPoolTest {
         s.advanceTimeBy(1, TimeUnit.MINUTES);
         s.triggerActions();
         assertEquals(1, disposed.get());
+        assertFalse(closed.get());
+        pool.close();
+        assertTrue(closed.get());
     }
 
     @Test
@@ -185,7 +191,8 @@ public class NonBlockingPoolTest {
         ts.assertValueCount(4) //
                 .assertNotComplete() //
                 .assertNoErrors();
-        @NonNull List<Integer> list = ts.values();
+        @NonNull
+        List<Integer> list = ts.values();
         // all 4 connections released were the same
         assertTrue(list.get(0) == list.get(1));
         assertTrue(list.get(1) == list.get(2));
@@ -220,7 +227,8 @@ public class NonBlockingPoolTest {
         list.get(1).checkin(); // should release a connection
         s.triggerActions();
         {
-            @NonNull List<Member<Integer>> values = ts.assertValueCount(3) //
+            @NonNull
+            List<Member<Integer>> values = ts.assertValueCount(3) //
                     .assertNotComplete() //
                     .assertNoErrors() //
                     .values();
@@ -233,7 +241,8 @@ public class NonBlockingPoolTest {
         s.triggerActions();
 
         {
-            @NonNull List<Member<Integer>> values = ts.assertValueCount(4) //
+            @NonNull
+            List<Member<Integer>> values = ts.assertValueCount(4) //
                     .assertNotComplete() //
                     .assertNoErrors() //
                     .values();
@@ -467,17 +476,17 @@ public class NonBlockingPoolTest {
     public void testConcurrentUseWithPoolSizeOf1DoesNotHang() {
         checkDoesNotHang(1);
     }
-    
+
     @Test
     public void testConcurrentUseWithPoolSizeOf2DoesNotHang() {
         checkDoesNotHang(2);
     }
-    
+
     @Test
     public void testConcurrentUseWithPoolSizeOf10DoesNotHang() {
         checkDoesNotHang(10);
     }
-    
+
     private static void checkDoesNotHang(int poolSize) {
         Scheduler io = Schedulers.from(Executors.newFixedThreadPool(2));
         AtomicInteger count = new AtomicInteger();
@@ -531,26 +540,48 @@ public class NonBlockingPoolTest {
 
         };
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidMaxSize() {
         NonBlockingPool //
                 .factory(() -> 1) //
                 .maxSize(0);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidIdleTime() {
         NonBlockingPool //
                 .factory(() -> 1) //
                 .maxIdleTime(-1, TimeUnit.SECONDS);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidIdleTimeBeforeHealthCheck() {
         NonBlockingPool //
                 .factory(() -> 1) //
                 .idleTimeBeforeHealthCheck(-1, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void testAlwaysTrue() throws Throwable {
+        assertTrue(NonBlockingPool.Builder.ALWAYS_TRUE.test(new Object()));
+    }
+
+    @Test
+    public void testCloseThrows() {
+        @Nullable
+        Consumer<? super Throwable> h = RxJavaPlugins.getErrorHandler();
+        AtomicBoolean b = new AtomicBoolean();
+        RxJavaPlugins.setErrorHandler(e -> b.set(true));
+        NonBlockingPool<Integer> pool = NonBlockingPool //
+                .factory(() -> 1) //
+                .onClose(() -> {
+                    throw new RuntimeException("boo");
+                }) //
+                .build();
+        pool.member();
+        pool.close();
+        assertTrue(b.get());
     }
 
 }
