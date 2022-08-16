@@ -6,8 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.davidmoten.rxjava3.pool.NonBlockingPool;
-import org.davidmoten.rxjava3.pool.Pool;
 import org.junit.Test;
 
 import io.reactivex.rxjava3.core.Flowable;

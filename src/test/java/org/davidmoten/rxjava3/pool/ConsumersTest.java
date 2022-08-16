@@ -1,6 +1,5 @@
 package org.davidmoten.rxjava3.pool;
 
-import org.davidmoten.rxjava3.pool.Consumers;
 import org.junit.Test;
 
 import com.github.davidmoten.junit.Asserts;

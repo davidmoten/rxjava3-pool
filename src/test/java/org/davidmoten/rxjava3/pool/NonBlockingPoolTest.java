@@ -15,11 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.davidmoten.rxjava3.pool.Member;
-import org.davidmoten.rxjava3.pool.MemberSingle;
-import org.davidmoten.rxjava3.pool.NonBlockingPool;
-import org.davidmoten.rxjava3.pool.Pool;
-import org.davidmoten.rxjava3.pool.PoolClosedException;
 import org.davidmoten.rxjava3.pool.internal.FlowableSingleDeferUntilRequest;
 import org.junit.Test;
 
