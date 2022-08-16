@@ -224,7 +224,12 @@ final class MemberSingle<T> extends Single<Member<T>> implements Closeable {
     private boolean shouldPerformHealthCheck(final DecoratingMember<T> m) {
         long now = scheduler.now(TimeUnit.MILLISECONDS);
         log.debug("schedule.now={}, lastCheck={}", now, m.lastCheckTime());
-        return pool.idleTimeBeforeHealthCheckMs > 0 && now - m.lastCheckTime() >= pool.idleTimeBeforeHealthCheckMs;
+        return shouldPerformHealthCheck(m, pool.idleTimeBeforeHealthCheckMs, now);
+    }
+
+    @VisibleForTesting
+    static <T> boolean shouldPerformHealthCheck(DecoratingMember<T> m, long idleTimeBeforeHealthCheckMs, long now) {
+        return idleTimeBeforeHealthCheckMs > 0 && now - m.lastCheckTime() >= idleTimeBeforeHealthCheckMs;
     }
 
     private void scheduleChecksNoDelay() {
