@@ -17,6 +17,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.davidmoten.rxjava3.pool.internal.FlowableSingleDeferUntilRequest;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.annotations.Nullable;
@@ -34,6 +36,8 @@ import io.reactivex.rxjava3.schedulers.TestScheduler;
 import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class NonBlockingPoolTest {
+    
+    private static final Logger log = LoggerFactory.getLogger(NonBlockingPoolTest.class); 
 
     @Test
     public void testMaxIdleTime() throws InterruptedException {
@@ -51,8 +55,8 @@ public class NonBlockingPoolTest {
         TestSubscriber<Member<Integer>> ts = new FlowableSingleDeferUntilRequest<>( //
                 pool.member()) //
                         .doOnNext(m -> m.checkin()) //
-                        .doOnNext(System.out::println) //
-                        .doOnRequest(t -> System.out.println("test request=" + t)) //
+                        .doOnNext(m -> log.debug(m.toString())) //
+                        .doOnRequest(t -> log.debug("test request=" + t)) //
                         .test(1);
         s.triggerActions();
         ts.assertValueCount(1);
@@ -79,7 +83,7 @@ public class NonBlockingPoolTest {
                 .checkinDecorator((x, y) -> x) //
                 .build();
         Single<Member<Integer>> member = pool.member() //
-                .doOnSuccess(System.out::println) //
+                .doOnSuccess(m -> log.debug(m.toString())) //
                 .doOnSuccess(m -> m.checkin());
         member.subscribe();
         s.triggerActions();
@@ -115,8 +119,8 @@ public class NonBlockingPoolTest {
             TestSubscriber<Member<Integer>> ts = new FlowableSingleDeferUntilRequest<>(pool //
                     .member()) //
                             .doOnNext(m -> m.checkin()) //
-                            .doOnNext(System.out::println) //
-                            .doOnRequest(t -> System.out.println("test request=" + t)) //
+                            .doOnNext(m -> log.debug(m.toString())) //
+                            .doOnRequest(t -> log.debug("test request=" + t)) //
                             .test(1);
             s.triggerActions();
             ts.assertValueCount(1);
@@ -132,8 +136,8 @@ public class NonBlockingPoolTest {
                     .member() //
                     .repeat() //
                     .doOnNext(m -> m.checkin()) //
-                    .doOnNext(System.out::println) //
-                    .doOnRequest(t -> System.out.println("test request=" + t)) //
+                    .doOnNext(m -> log.debug(m.toString())) //
+                    .doOnRequest(t -> log.debug("test request=" + t)) //
                     .test(1);
             s.triggerActions();
             ts.assertValueCount(1);
@@ -148,8 +152,8 @@ public class NonBlockingPoolTest {
                     .member() //
                     .repeat() //
                     .doOnNext(m -> m.checkin()) //
-                    .doOnNext(System.out::println) //
-                    .doOnRequest(t -> System.out.println("test request=" + t)) //
+                    .doOnNext(m -> log.debug(m.toString())) //
+                    .doOnRequest(t -> log.debug("test request=" + t)) //
                     .test(1);
             s.triggerActions();
             ts.assertValueCount(1);
@@ -275,9 +279,9 @@ public class NonBlockingPoolTest {
         {
             TestSubscriber<Member<Integer>> ts = new FlowableSingleDeferUntilRequest<>(pool.member()) //
                     .repeat() //
-                    .doOnNext(System.out::println) //
+                    .doOnNext(m -> log.debug(m.toString())) //
                     .doOnNext(m -> m.checkin()) //
-                    .doOnRequest(t -> System.out.println("test request=" + t)) //
+                    .doOnRequest(t -> log.debug("test request=" + t)) //
                     .test(1);
             s.triggerActions();
             // health check doesn't get run on create
@@ -285,7 +289,7 @@ public class NonBlockingPoolTest {
             assertEquals(0, disposed.get());
             assertEquals(0, healthChecks.get());
             // next request is immediate so health check does not run
-            System.out.println("health check should not run because immediate");
+            log.debug("health check should not run because immediate");
             ts.request(1);
             s.triggerActions();
             ts.assertValueCount(2);
@@ -295,7 +299,7 @@ public class NonBlockingPoolTest {
             // now try to trigger health check
             s.advanceTimeBy(1, TimeUnit.MILLISECONDS);
             s.triggerActions();
-            System.out.println("trying to trigger health check");
+            log.debug("trying to trigger health check");
             ts.request(1);
             s.triggerActions();
             ts.assertValueCount(2);
@@ -571,17 +575,21 @@ public class NonBlockingPoolTest {
     public void testCloseThrows() {
         @Nullable
         Consumer<? super Throwable> h = RxJavaPlugins.getErrorHandler();
-        AtomicBoolean b = new AtomicBoolean();
-        RxJavaPlugins.setErrorHandler(e -> b.set(true));
-        NonBlockingPool<Integer> pool = NonBlockingPool //
-                .factory(() -> 1) //
-                .onClose(() -> {
-                    throw new RuntimeException("boo");
-                }) //
-                .build();
-        pool.member();
-        pool.close();
-        assertTrue(b.get());
+        try {
+            AtomicBoolean b = new AtomicBoolean();
+            RxJavaPlugins.setErrorHandler(e -> b.set(true));
+            NonBlockingPool<Integer> pool = NonBlockingPool //
+                    .factory(() -> 1) //
+                    .onClose(() -> {
+                        throw new RuntimeException("boo");
+                    }) //
+                    .build();
+            pool.member();
+            pool.close();
+            assertTrue(b.get());
+        } finally {
+            RxJavaPlugins.setErrorHandler(h);
+        }
     }
 
 }
