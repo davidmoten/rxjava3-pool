@@ -6,6 +6,8 @@ state Checking #palegreen {
 }
 state Releasing #palegreen {
 }
+state CheckedOut #palegreen {
+}
 
 [*] --> NotInitialized: Create
 NotInitialized --> Initializing: Initialize
@@ -36,11 +38,9 @@ Checking: send Checkout to self
 Checking: else
 Checking: send Dispose to self
 
-note bottom of CheckedOut
-  the Member is pushed to the 
-  next pool subscriber for active 
-  use
-end note
+CheckedOut: the Member is pushed 
+CheckedOut: to the active next pool 
+CheckedOut: subscriber
 
 @enduml
 
