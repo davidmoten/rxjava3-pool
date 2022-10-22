@@ -8,7 +8,7 @@
         <version>0.1</version>
     </parent>
     <artifactId>rxjava3-pool</artifactId>
-    <version>0.9.3-SNAPSHOT</version>
+    <version>0.9.3</version>
 
     <name>${project.artifactId}</name>
     <description>RxJava 3.x reactive pool</description>
@@ -60,7 +60,7 @@
         <connection>${scm.url}</connection>
         <developerConnection>${scm.url}</developerConnection>
         <url>${scm.url}</url>
-        <tag>0.1</tag>
+        <tag>0.9.3</tag>
     </scm>
 
     <dependencies>
