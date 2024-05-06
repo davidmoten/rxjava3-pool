@@ -231,7 +231,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.21.2</version>
+                <version>3.22.0</version>
                 <configuration>
                     <linkXRef>false</linkXRef>
                 </configuration>
@@ -272,7 +272,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.21.2</version>
+                <version>3.22.0</version>
                 <configuration>
                     <targetJdk>${maven.compiler.target}</targetJdk>
                     <aggregate>true</aggregate>
