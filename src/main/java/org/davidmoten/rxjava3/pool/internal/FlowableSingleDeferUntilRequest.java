@@ -55,9 +55,7 @@ public final class FlowableSingleDeferUntilRequest<T> extends Flowable<T> {
 
         @Override
         public void cancel() {
-            if (disposable.compareAndSet(null, DisposableHelper.DISPOSED)) {
-                return;
-            } else {
+            if (!disposable.compareAndSet(null, DisposableHelper.DISPOSED)) {
                 disposable.get().dispose();
                 // clear for GC
                 disposable.set(DisposableHelper.DISPOSED);
